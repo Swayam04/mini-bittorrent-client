@@ -1,22 +1,25 @@
 package bencode;
 
+import com.google.gson.Gson;
+
 public class DeBencoder {
+    private static final Gson gson = new Gson();
 
     public static String decode(String bencode) {
         Character firstChar = bencode.charAt(0);
         if (firstChar.equals('i')) {
-            return decodeInteger(bencode);
+            return  gson.toJson(decodeInteger(bencode));
         } else if (Character.isDigit(firstChar)) {
-            return decodeString(bencode);
+            return gson.toJson(decodeString(bencode));
         } else {
             throw new IllegalArgumentException("Invalid bencode");
         }
     }
 
-    private static String decodeInteger(String input) {
+    private static Long decodeInteger(String input) {
         try {
             input = input.trim().substring(1, input.length() - 1);
-            return String.valueOf(Long.parseLong(input));
+            return Long.parseLong(input);
         } catch (NumberFormatException e) {
             throw new RuntimeException("Invalid integer: " + input);
         }
